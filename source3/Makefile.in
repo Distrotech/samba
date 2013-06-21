@@ -3466,6 +3466,7 @@ clean:: cleanlibs
 		../testsuite/*/*.o \
 		../nsswitch/*.o ../nsswitch/*/*.o ../nsswitch/*/*/*.o ../nsswitch/*.@SHLIBEXT@ \
 		../client/*.o \
+		../auth/*.o \
 		*/*.@SHLIBEXT@ */*/*.@SHLIBEXT@ */*/*/*.@SHLIBEXT@ \
 		$(TOPFILES) $(BIN_PROGS) $(SBIN_PROGS) \
 		$(MODULES) $(TORTURE_PROGS) \
