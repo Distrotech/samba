@@ -203,6 +203,7 @@ struct global {
 	char *szIdmapGID;
 	bool bPassdbExpandExplicit;
 	int AlgorithmicRidBase;
+	char *szTemplatePrimaryGroup;
 	char *szTemplateHomedir;
 	char *szTemplateShell;
 	char *szWinbindSeparator;
@@ -4618,6 +4619,15 @@ static struct parm_struct parm_table[] = {
 		.enum_list	= NULL,
 		.flags		= FLAG_HIDE,
 	},
+        {
+		.label		= "template primary group",
+		.type		= P_STRING,
+		.p_class	= P_GLOBAL,
+		.ptr		= &Globals.szTemplatePrimaryGroup,
+		.special	= NULL,
+		.enum_list	= NULL,
+		.flags		= FLAG_ADVANCED,
+        },
 	{
 		.label		= "template homedir",
 		.type		= P_STRING,
@@ -5419,6 +5429,7 @@ static void init_globals(bool reinit_globals)
 	string_set(&Globals.szIdmapBackend, "tdb");
 	Globals.bIdmapReadOnly = false;
 
+	string_set(&Globals.szTemplatePrimaryGroup, "nobody");
 	string_set(&Globals.szTemplateShell, "/bin/false");
 	string_set(&Globals.szTemplateHomedir, "/home/%D/%U");
 	string_set(&Globals.szWinbindSeparator, "\\");
@@ -5710,6 +5721,7 @@ FN_GLOBAL_INTEGER(lp_username_map_cache_time, &Globals.iUsernameMapCacheTime)
 FN_GLOBAL_STRING(lp_check_password_script, &Globals.szCheckPasswordScript)
 
 FN_GLOBAL_STRING(lp_wins_hook, &Globals.szWINSHook)
+FN_GLOBAL_CONST_STRING(lp_template_primary_group, &Globals.szTemplatePrimaryGroup)
 FN_GLOBAL_CONST_STRING(lp_template_homedir, &Globals.szTemplateHomedir)
 FN_GLOBAL_CONST_STRING(lp_template_shell, &Globals.szTemplateShell)
 FN_GLOBAL_CONST_STRING(lp_winbind_separator, &Globals.szWinbindSeparator)
