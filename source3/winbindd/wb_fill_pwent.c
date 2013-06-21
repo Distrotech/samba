@@ -134,12 +134,27 @@ static void wb_fill_pwent_sid2gid_done(struct tevent_req *subreq)
 
 	/* Home directory and shell */
 
-	if (!fillup_pw_field(lp_template_homedir(), user_name, dom_name,
-			     state->pw->pw_uid, state->pw->pw_gid,
-			     state->info->homedir, state->pw->pw_dir)) {
-		tevent_req_nterror(req, NT_STATUS_NO_SUCH_USER);
-		return;
+	if (! strcmp(lp_template_homedir(),"hash2")) {
+		if (strlen(user_name) >= 2)
+			snprintf(state->pw->pw_dir,sizeof(state->pw->pw_dir),"/var/home/%c/%c/%s",user_name[0],user_name[1],user_name);
+		else if (strlen(user_name) == 1)
+			snprintf(state->pw->pw_dir,sizeof(state->pw->pw_dir),"/var/home/%c/%c/%s",user_name[0],user_name[0],user_name);
+		else {
+			tevent_req_nterror(req, NT_STATUS_NO_SUCH_USER);
+			return;
+		}
+	} else {
+		if (!fillup_pw_field(lp_template_homedir(), user_name, dom_name,
+				     state->pw->pw_uid, state->pw->pw_gid,
+				     state->info->homedir, state->pw->pw_dir)) {
+			tevent_req_nterror(req, NT_STATUS_NO_SUCH_USER);
+			return;
+		}
 	}
+
+	struct group *unix_group=getgrnam((const char*)lp_template_primary_group());
+	if (unix_group)
+		state->pw->pw_gid=unix_group->gr_gid;
 
 	if (!fillup_pw_field(lp_template_shell(), user_name, dom_name,
 			     state->pw->pw_uid, state->pw->pw_gid,
