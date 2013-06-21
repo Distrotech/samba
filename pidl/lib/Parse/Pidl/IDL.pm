@@ -2576,7 +2576,7 @@ again:
 
 	for ($parser->YYData->{INPUT}) {
 		if (/^\#/) {
-			if (s/^\# (\d+) \"(.*?)\"( \d+|)//) {
+			if (s/^\# (\d+) \"(.*?)\"(( \d+){1,4}|)//) {
 				$parser->YYData->{LINE} = $1-1;
 				$parser->YYData->{FILE} = $2;
 				goto again;
